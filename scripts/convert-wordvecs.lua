@@ -16,6 +16,7 @@ while true do
   line = file:read()
   if not line then break end
   if count == 0 then
+    --what does the lower line do ? why is a number used to call the split function?
     dim = #stringx.split(line) - 1
   end
   count = count + 1
