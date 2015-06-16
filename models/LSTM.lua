@@ -3,7 +3,7 @@
  Long Short-Term Memory.
 
 --]]
-
+-- Form 2 classes which are child classes of nn.Module ??
 local LSTM, parent = torch.class('treelstm.LSTM', 'nn.Module')
 
 function LSTM:__init(config)
