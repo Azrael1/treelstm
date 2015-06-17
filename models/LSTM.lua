@@ -56,6 +56,7 @@ function LSTM:new_cell()
   local htable, ctable = {}, {}
   for layer = 1, self.num_layers do
     local h_p = (self.num_layers == 1) and htable_p or nn.SelectTable(layer)(htable_p)
+-- SelectTable selects a index. It lo
     local c_p = (self.num_layers == 1) and ctable_p or nn.SelectTable(layer)(ctable_p)
 
     local new_gate = function()
