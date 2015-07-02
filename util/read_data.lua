@@ -17,6 +17,8 @@ function treelstm.read_sentences(path, vocab)
   while true do
     line = file:read()
     if line == nil then break end
+    -- Split the line if there are spaces in the line. This is in the penlight library.
+    -- Although it is not imported in this file, it is imported in the init.lua where this file is also imported.
     local tokens = stringx.split(line)
     local len = #tokens
     local sent = torch.IntTensor(len)
@@ -24,6 +26,7 @@ function treelstm.read_sentences(path, vocab)
       local token = tokens[i]
       sent[i] = vocab:index(token)
     end
+    -- sentences is an list/table with each element the indexes of the words of that particular sentence.
     sentences[#sentences + 1] = sent
   end
 
@@ -40,9 +43,13 @@ function treelstm.read_trees(parent_path, label_path)
 
   while true do
     local parents = parent_file:read()
+    -- Read the file line by line.
     if parents == nil then break end
+    -- Split the line according to the spaces in the line. This is in the penlight library.
+    -- Although it is not imported in this file, it is imported in the init.lua where this file is also imported.
     parents = stringx.split(parents)
     for i, p in ipairs(parents) do
+      -- Store the indexes of the parents in the "parents" list/table.
       parents[i] = tonumber(p)
     end
 
@@ -54,6 +61,7 @@ function treelstm.read_trees(parent_path, label_path)
         if l == '#' then
           labels[i] = nil
         else
+          -- Store the indexes of the parents in the "parents" list/table.
           labels[i] = tonumber(l)
         end
       end
@@ -72,6 +80,7 @@ function treelstm.read_tree(parents, labels)
   if labels == nil then labels = {} end
   local root
   for i = 1, size do
+    -- If the tree is not defined for the index and the parent of the node at the index is -1 then, go ahead.
     if not trees[i] and parents[i] ~= -1 then
       local idx = i
       local prev = nil
@@ -87,11 +96,14 @@ function treelstm.read_tree(parents, labels)
         end
         trees[idx] = tree
         tree.idx = idx
+        -- Table structures are associative arrays. Meaning, the below line is just another way to define
+        -- a key/value pair in a table.See this page http://lua-users.org/wiki/TablesTutorial
         tree.gold_label = labels[idx]
         if trees[parent] ~= nil then
           trees[parent]:add_child(tree)
           break
         elseif parent == 0 then
+          -- Looks like that the root node is defined by the index 0
           root = tree
           break
         else
@@ -139,6 +151,8 @@ function treelstm.read_relatedness_dataset(dir, vocab, constituency)
   dataset.labels = torch.Tensor(dataset.size)
   for i = 1, dataset.size do
     dataset.ids[i] = id_file:readInt()
+    -- Description(readDouble): Reads 8 bytes from the file converts them to a double and returns them.
+    -- Why this calculation?
     dataset.labels[i] = 0.25 * (sim_file:readDouble() - 1)
   end
   id_file:close()
@@ -146,7 +160,7 @@ function treelstm.read_relatedness_dataset(dir, vocab, constituency)
   return dataset
 end
 
---[[
+--[[t
 
  Sentiment
 
