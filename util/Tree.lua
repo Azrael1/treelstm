@@ -19,6 +19,8 @@ function Tree:add_child(c)
 end
 
 function Tree:size()
+-- Find the size of the Tree Structure by iterating over the children and finding the size of each of the children.
+-- Check if the _size of this Tree has been predefined through some previous iterations.
   if self._size ~= nil then return self._size end
   local size = 1
   for i = 1, self.num_children do
@@ -46,6 +48,9 @@ local function depth_first_preorder(tree, nodes)
   if tree == nil then
     return
   end
+  -- If the tree is not nil then append the tree in the list/table nodes.
+  -- When called over the topmost node, then starts returning the mini-tree structures in a depth_first fashion.
+  -- Can change to breadth- first by simple layerwise iteration, i.e. Go from bottom to top.
   table.insert(nodes, tree)
   for i = 1, tree.num_children do
     depth_first_preorder(tree.children[i], nodes)
