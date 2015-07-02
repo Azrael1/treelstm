@@ -16,9 +16,11 @@ function Vocab:__init(path)
 
   local file = io.open(path)
   while true do
+    -- read function reads the document line by line unlike python.
     local line = file:read()
     if line == nil then break end
     self.size = self.size + 1
+    -- 1 token per line.
     self._tokens[self.size] = line
     self._index[line] = self.size
   end
@@ -26,6 +28,7 @@ function Vocab:__init(path)
 
   local unks = {'<unk>', '<UNK>', 'UUUNKKK'}
   for _, tok in pairs(unks) do
+    -- Check if the Unknown token has been previously defined/ is defined in the vocab (_index)
     self.unk_index = self.unk_index or self._index[tok]
     if self.unk_index ~= nil then
       self.unk_token = tok
@@ -35,6 +38,7 @@ function Vocab:__init(path)
 
   local starts = {'<s>', '<S>'}
   for _, tok in pairs(starts) do
+    -- Check if the start token has been previously defined/ is defined in the vocab (_index)
     self.start_index = self.start_index or self._index[tok]
     if self.start_index ~= nil then
       self.start_token = tok
@@ -44,6 +48,7 @@ function Vocab:__init(path)
 
   local ends = {'</s>', '</S>'}
   for _, tok in pairs(ends) do
+    -- Check if the end token has been previously defined/ is defined in the vocab (_index)
     self.end_index = self.end_index or self._index[tok]
     if self.end_index ~= nil then
       self.end_token = tok
@@ -86,7 +91,9 @@ function Vocab:token(i)
 end
 
 function Vocab:map(tokens)
+  -- Given a list of tokens, map them to their indexes. Wrap this mapping in a tensor and return the tensor as output.
   local len = #tokens
+  -- define a Integer Tensor of length len
   local output = torch.IntTensor(len)
   for i = 1, len do
     output[i] = self:index(tokens[i])
