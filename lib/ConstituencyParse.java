@@ -44,22 +44,10 @@ public class ConstituencyParse {
     parentWriter = new BufferedWriter(new FileWriter(parentPath));
     parser = LexicalizedParser.loadModel(PCFG_PATH);
     binarizer = TreeBinarizer.simpleTreeBinarizer(
-    // how is getTLPParams() used? Could not find documentation
       parser.getTLPParams().headFinder(), parser.treebankLanguagePack());
     transformer = new CollapseUnaryTransformer();
-
-    // set up to produce dependency representations from constituency trees
     TreebankLanguagePack tlp = new PennTreebankLanguagePack();
     gsf = tlp.grammaticalStructureFactory();
-    //A GrammaticalStructure stores dependency relations between nodes in a tree. 
-    //A new GrammaticalStructure is constructed from an existing parse tree with 
-    //the help of GrammaticalRelation, which defines a hierarchy of grammatical relations,
-    //along with patterns for identifying them in parse trees. The constructor for GrammaticalStructure
-    //uses these definitions to populate the new GrammaticalStructure with as many labeled 
-    //grammatical relations as it can. Once constructed, the new GrammaticalStructure can be printed
-    //in various formats, or interrogated using the interface methods in this class. 
-    //Internally, this uses a representation via a TreeGraphNode, that is, a tree with
-    //additional labeled arcs between nodes, for representing the grammatical relations in a parse tree.
   }
 
   public List<HasWord> sentenceToTokens(String line) {
@@ -74,7 +62,6 @@ public class ConstituencyParse {
         tokens.add(new Word(word));
       }
     }
-
     return tokens;
   }
 
@@ -87,19 +74,12 @@ public class ConstituencyParse {
     Tree binarized = binarizer.transformTree(tree);
     Tree collapsedUnary = transformer.transformTree(binarized);
     Trees.convertToCoreLabels(collapsedUnary);
-    /* A core label represents a single word with ancillary info attached using notations. A corelabel is 
-    a map from keys(who are class objects) to values which are determined by key.*/
     collapsedUnary.indexSpans();
-    /*Index all spans (constituents) in the tree. 
-    For this, spans uses 0-based indexing and the span records the 
-    fencepost to the left of the first word and after the last word of the span.
-    The spans are only recorded if the Tree has labels of a class which extends CoreMap.*/
     List<Tree> leaves = collapsedUnary.getLeaves();
     int size = collapsedUnary.size() - leaves.size();
     int[] parents = new int[size];
     HashMap<Integer, Integer> index = new HashMap<Integer, Integer>();
 
-// Finding the parent dictionary
     int idx = leaves.size();
     int leafIdx = 0;
     for (Tree leaf : leaves) {
@@ -114,12 +94,8 @@ public class ConstituencyParse {
         }
         int parentIdx;
         int parentNumber = parent.nodeNumber(collapsedUnary);
-        /* nodeNumber: Calculates the node's number, defined as the number of nodes traversed in a left-to-right, 
-        depth-first search of the tree starting at root and ending at this. Returns -1 if root does not contain 
-        this.*/
         if (!index.containsKey(parentNumber)) {
           parentIdx = idx++;
-          // Doing idx++ in java results in increasing the idx variable by 1. That result is stored in idx.
           index.put(parentNumber, parentIdx);
         } else {
           parentIdx = index.get(parentNumber);
@@ -134,8 +110,6 @@ public class ConstituencyParse {
     return parents;
   }
 
-  // convert constituency parse to a dependency representation and return the
-  // parent pointer representation of the tree
   public int[] depTreeParents(Tree tree, List<HasWord> tokens) {
     GrammaticalStructure gs = gsf.newGrammaticalStructure(tree);
     Collection<TypedDependency> tdl = gs.typedDependencies();
