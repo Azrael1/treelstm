@@ -87,6 +87,8 @@ public class ConstituencyParse {
     Tree binarized = binarizer.transformTree(tree);
     Tree collapsedUnary = transformer.transformTree(binarized);
     Trees.convertToCoreLabels(collapsedUnary);
+    /* A core label represents a single word with ancillary info attached using notations. A corelabel is 
+    a map from keys(who are class objects) to values which are determined by key.*/
     collapsedUnary.indexSpans();
     /*Index all spans (constituents) in the tree. 
     For this, spans uses 0-based indexing and the span records the 
@@ -110,9 +112,11 @@ public class ConstituencyParse {
           parents[curIdx] = 0;
           break;
         }
-
         int parentIdx;
         int parentNumber = parent.nodeNumber(collapsedUnary);
+        /* nodeNumber: Calculates the node's number, defined as the number of nodes traversed in a left-to-right, 
+        depth-first search of the tree starting at root and ending at this. Returns -1 if root does not contain 
+        this.*/
         if (!index.containsKey(parentNumber)) {
           parentIdx = idx++;
           index.put(parentNumber, parentIdx);
