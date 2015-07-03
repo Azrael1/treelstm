@@ -119,12 +119,12 @@ public class ConstituencyParse {
         this.*/
         if (!index.containsKey(parentNumber)) {
           parentIdx = idx++;
+          // Doing idx++ in java results in increasing the idx variable by 1. That result is stored in idx.
           index.put(parentNumber, parentIdx);
         } else {
           parentIdx = index.get(parentNumber);
           done = true;
         }
-
         parents[curIdx] = parentIdx + 1;
         cur = parent;
         curIdx = parentIdx;
