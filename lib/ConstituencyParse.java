@@ -38,6 +38,7 @@ public class ConstituencyParse {
 
   public ConstituencyParse(String tokPath, String parentPath, boolean tokenize) throws IOException {
     this.tokenize = tokenize;
+    // "this" refers to the current object.
     if (tokPath != null) {
       tokWriter = new BufferedWriter(new FileWriter(tokPath));
     }
