@@ -17,6 +17,8 @@ import edu.stanford.nlp.util.Generics;
 public class CollapseUnaryTransformer implements TreeTransformer {
   public Tree transformTree(Tree tree) {
     if (tree.isPreTerminal() || tree.isLeaf()) {
+      //Return whether this node is a preterminal or not. 
+      //A preterminal is defined to be a node with one child which is itself a leaf.
       return tree.deepCopy();
     }
 
