@@ -5,7 +5,6 @@
     // size = 8-4 = 4
     int[] parents = new int[size];
     HashMap<Integer, Integer> index = new HashMap<Integer, Integer>();
-
     int idx = leaves.size();
     // idx = 4
     int leafIdx = 0;
@@ -90,7 +89,7 @@
         }
 
         parents[curIdx] = parentIdx + 1;
-        // parents = [0:5, 1:6]
+        // parents = [0:5, 4:0, 1:6]
         cur = parent;
         // cur = 'b'
         curIdx = parentIdx;
@@ -122,7 +121,7 @@
         }
         // curIdx is presently = 5(line number 97)
         parents[curIdx] = parentIdx + 1;
-        // parents = [0:5, 1:6, 5:5]
+        // parents = [0:5, 4:0, 1:6, 5:5]
         cur = parent;
         // cur = 'x'
         curIdx = parentIdx;
@@ -159,7 +158,7 @@
         }
 
         parents[curIdx] = parentIdx + 1;
-        // parents = [0:5, 1:6, 5:5, 2:6] (line 125 + new addition)
+        // parents = [0:5, 4:0, 1:6, 5:5, 2:6] (line 125 + new addition)
         cur = parent;
         // cur = 'b'
         curIdx = parentIdx;
@@ -197,7 +196,7 @@
         }
 
         parents[curIdx] = parentIdx + 1;
-        // parents = [0:5, 1:6, 5:5, 2:6, 3:5]
+        // parents = [0:5, 4:0, 1:6, 5:5, 2:6, 3:5]
         cur = parent;
         // cur = 'x'
         curIdx = parentIdx;
